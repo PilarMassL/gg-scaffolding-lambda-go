@@ -28,6 +28,16 @@ Run `make lambda` to build the project. The build artifacts will be stored in th
 
 Run `go run function-name/cmd/main.go` on the app root directory.
 
+Running with SAM:
+
+```
+echo '{}' | sam local invoke FunctionName --event - 
+```
+
+```
+sam local invoke FunctionName --event ./events/function-name-event.json
+```
+
 ## Running unit tests
 
 Run `make test` to execute the unit tests.
