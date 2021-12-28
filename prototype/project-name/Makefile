@@ -27,7 +27,7 @@ clean:
 build:clean tidy
 	@for dir in ${SUBDIRS_LIST}; do \
  		echo 'building…' $$dir; \
- 		go build  -i -v -o ./dist/$$dir ./$$dir/cmd & done
+ 		go build  -i -v -o ./dist/$$dir ./$$dir/cmd/lambda & done
 
 install: build ## Build the binary file
 	@for dir in ${SUBDIRS_LIST}; do \
@@ -52,7 +52,7 @@ release: package-release ## exevute lint
 lambda:clean tidy
 	@for dir in ${SUBDIRS_LIST}; do \
 		echo 'building lambdas…' $$dir; \
-		CGO_ENABLED=0 GOOS=linux go build -mod=readonly -v -o ./$$dir/dist/main ./$$dir/cmd ; \
+		CGO_ENABLED=0 GOOS=linux go build -mod=readonly -v -o ./$$dir/dist/main ./$$dir/cmd/lambda ; \
 		chmod +x $$dir/dist/main; \
 		zip -jrm ./$$dir/dist/$$dir.zip ./$$dir/dist/main; \
 	done
