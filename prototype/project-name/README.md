@@ -49,3 +49,25 @@ Run `make fmt` to execute the format check.
 ## Running Linter
 
 Run `make lint` to execute linter verify.
+
+## Project Layout
+
+TODO
+
+### `/adapter`
+
+### `/api`
+
+### `/cmd`
+
+### `/config`
+
+### `/internal`
+
+#### `/internal/domain`
+
+#### `/internal/port`
+
+## References
+- https://github.com/golang-standards/project-layout/blob/master/README_es.md
+- https://go.dev/doc/effective_go#names
