@@ -36,12 +36,18 @@ Debe ser fácilmente adaptable a distinos canales (cli, ide, web, chatbot, etc).
 Con el fin de mantener la fácilidad solo se consideran casos de uso tipo _Greenfield_ en donde se necesita crear la estructura base desde cero.
 
 Ejemplo de uso desde la terminal:
-*Nota:* Esto es una visión de cómo sería si 
+*Nota:* Esto es una visión de cómo sería la interfaz de linea de comandos.
 
-Para generar una función
+Para iniciar un proyecto basado en funciones
 ```
-ggen fn
-Gracias por usar el generador hecho con ❤️ por el GG.
+ggen init <PROYECT_NAME>
+[INFO] Generando desde la plantilla...
+[INFO] proyecto base generado ✅
+```
+
+Para agregar una función, debe hacerse sobre un proyecto iniciado.
+```
+ggen add fn
 > ¿Cuál es el nombre de la función? (my-function)
 > ¿Qué tipo de evento disparará la función?
  👉 - API Proxy HTTP
@@ -54,8 +60,7 @@ Gracias por usar el generador hecho con ❤️ por el GG.
 
 Para agregar un puerto y adaptador a una función:
 ```
-ggen port -f "my-function"
-Gracias por usar el generador hecho con ❤️ por el GG.
+ggen add port -f my-function
 > ¿Cuál es el nombre del puerto?
 > ¿Agregar adaptador? (Y/n)
 > Tipo de adaptador
@@ -71,8 +76,7 @@ Gracias por usar el generador hecho con ❤️ por el GG.
 
 Para generar un servicio:
 ```
-ggen svc -f "my-function"
-Gracias por usar el generador hecho con ❤️ por el GG.
+ggen add svc -f my-function
 > Tipo de servicio
     - Dominio
  👉 - Aplicación
