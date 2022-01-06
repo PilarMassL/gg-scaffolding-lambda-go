@@ -13,7 +13,7 @@ func createDummySrcFile() []SrcFile {
 	return []SrcFile{
 		{
 			AbsolutePath: fmt.Sprintf("%s/test.txt", wd),
-			Content:      []byte(`hola mundo`),
+			Content:      `hola mundo`,
 		},
 	}
 }

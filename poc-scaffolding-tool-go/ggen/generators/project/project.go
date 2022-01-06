@@ -1,24 +1,32 @@
-package proyect
+package project
 
 import (
-	"errors"
-
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators/project/templates"
 )
 
-// ProyectGenerator genera la estructura base de un proyecto al cuál se le pueden agregar funciones.
-type ProyectGenerator struct {
+// ProjectGenerator genera la estructura base de un proyecto al cuál se le pueden agregar funciones.
+type ProjectGenerator struct {
 	helper generators.GeneratorHelper
 	wd     string
 }
 
-func NewProjectGenerator(helper generators.GeneratorHelper, wd string) *ProyectGenerator {
-	return &ProyectGenerator{
+// ProjectParams contiene todos los parámetros necesarios para generar el proyecto base.
+type ProjectParams struct {
+	ProjectName string
+}
+
+func NewProjectGenerator(helper generators.GeneratorHelper, wd string) *ProjectGenerator {
+	return &ProjectGenerator{
 		helper: helper,
 		wd:     wd,
 	}
 }
 
-func (g *ProyectGenerator) Generate(params generators.Params) ([]generators.SrcFile, error) {
-	return nil, errors.New("No implementado")
+func (g *ProjectGenerator) Generate(params ProjectParams) ([]generators.SrcFile, error) {
+	//obtenemos las plantillas
+	tpls := []generators.SrcTpl{
+		templates.ReadMe(),
+	}
+	return g.helper.FillTpls(tpls, params, g.wd)
 }
