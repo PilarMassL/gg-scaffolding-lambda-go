@@ -1,8 +1,8 @@
 package project
 
 import (
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators"
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators/project/templates"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project/templates"
 )
 
 // ProjectGenerator genera la estructura base de un proyecto al cuál se le pueden agregar funciones.

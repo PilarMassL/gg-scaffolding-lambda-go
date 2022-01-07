@@ -1,6 +1,6 @@
 package testdata
 
-import "github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators"
+import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
 
 /*
  Archivos fuente rellando usando las plantillas con datos de prueba.

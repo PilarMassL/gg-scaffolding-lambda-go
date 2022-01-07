@@ -1,4 +1,4 @@
-module github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen
+module github.com/PilarMassL/gg-scaffolding-lambda-go/ggen
 
 go 1.17
 

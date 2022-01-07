@@ -3,8 +3,8 @@ package project
 import (
 	"testing"
 
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators"
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators/project/testdata"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project/testdata"
 	"github.com/stretchr/testify/assert"
 )
 

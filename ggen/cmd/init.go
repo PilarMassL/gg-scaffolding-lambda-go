@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators"
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/poc-scaffolding-tool-go/ggen/generators/project"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project"
 )
 
 // initCmd representa el comando para iniciar un proyecto basado en funciones.
