@@ -1,4 +1,5 @@
-# poc-scaffolding-tool-go
+# GGEN
+PoC herramienta de línea de comandos, escrita en Go para hacer _scaffolding_ de funciones lambdas.
 
 ## Introducción
 
