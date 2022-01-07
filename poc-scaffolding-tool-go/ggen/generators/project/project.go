@@ -8,18 +8,19 @@ import (
 // ProjectGenerator genera la estructura base de un proyecto al cuál se le pueden agregar funciones.
 type ProjectGenerator struct {
 	helper generators.GeneratorHelper
-	wd     string
+	writer generators.Writer
 }
 
 // ProjectParams contiene todos los parámetros necesarios para generar el proyecto base.
 type ProjectParams struct {
-	ProjectName string
+	ProjectName string `prompt:"¿Cuál es el nombre del proyecto?"`
 }
 
-func NewProjectGenerator(helper generators.GeneratorHelper, wd string) *ProjectGenerator {
+func NewProjectGenerator(writer generators.Writer) *ProjectGenerator {
 	return &ProjectGenerator{
-		helper: helper,
-		wd:     wd,
+		// Acoplamos el Helper al generador, con la ventaja de simplificar la creación.
+		helper: generators.NewGeneratorHelper(),
+		writer: writer,
 	}
 }
 
@@ -28,5 +29,6 @@ func (g *ProjectGenerator) Generate(params ProjectParams) ([]generators.SrcFile,
 	tpls := []generators.SrcTpl{
 		templates.ReadMe(),
 	}
-	return g.helper.FillTpls(tpls, params, g.wd)
+	//Rellenamos y guardamos
+	return g.helper.FillTplsAndSave(tpls, params, g.writer)
 }

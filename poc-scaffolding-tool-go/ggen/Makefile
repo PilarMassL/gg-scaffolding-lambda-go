@@ -58,9 +58,9 @@ cpd:  ## cpd
 
 coverage: ## Generate global code coverage report
 	rm -rf coverage
-	rm -rf coverage.html
-	./scripts/coverage.sh;
-
+	rm -rf coverage.out
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
 
 race:  ## Run data race detector
 	@go test -race -short ${PKG_LIST}

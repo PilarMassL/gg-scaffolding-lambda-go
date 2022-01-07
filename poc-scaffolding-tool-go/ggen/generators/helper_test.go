@@ -4,15 +4,31 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 /*
- Funciones de ayuda
+  Test objects
 */
 
 type DummyParams struct {
 	Titulo string
 }
+
+// MyMockedWriter es un mock de tipo Writer
+type MyMockedWriter struct {
+	mock.Mock
+}
+
+// Se implementa la interfaz generators.Writer
+func (m *MyMockedWriter) Save(tplsFilled []SrcTpl) ([]SrcFile, error) {
+	args := m.Called(tplsFilled)
+	return args.Get(0).([]SrcFile), args.Error(1)
+}
+
+/*
+ Funciones de ayuda
+*/
 
 func createDummyParams(titulo string) *DummyParams {
 	return &DummyParams{
@@ -41,10 +57,9 @@ func TestFillTplsSuccess(t *testing.T) {
 	}
 
 	params := createDummyParams("Titulo:")
-	wd := "/home/test"
 
 	//Act
-	files, err := helper.FillTpls(tpls, params, wd)
+	files, err := helper.FillTpls(tpls, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -60,10 +75,9 @@ func TestFillTplSuccess(t *testing.T) {
 	helper := NewGeneratorHelper()
 	tpl := createDummySrcTpl()
 	params := createDummyParams("Titulo:")
-	wd := "/home/test"
 
 	//Act
-	file, err := helper.FillTpl(tpl, params, wd)
+	file, err := helper.FillTpl(tpl, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -73,20 +87,79 @@ func TestFillTplSuccess(t *testing.T) {
 	}
 }
 
-func TestBuildAbsolutePath(t *testing.T) {
+//Debería fallar porque la plantilla no tiene el formato adecuado.
+func TestFillTplFailureBadTemplate(t *testing.T) {
 	//Arrange
 	helper := NewGeneratorHelper()
-	tpl := createDummySrcTpl()
 	params := createDummyParams("")
-	wd := "/home/test"
+
+	tpl := SrcTpl{
+		RelativePath: "./doc/LICENCE",
+		Content:      `LICENCE dummy {{ badPlaceholder }}`, //El formato correcto debería ser: .BadPlaceHolder
+	}
 
 	//Act
-	file, err := helper.FillTpl(tpl, params, wd)
+	_, err := helper.FillTpl(tpl, params)
 
 	//Assert
 	assert := assert.New(t)
-	assert.Nil(err)
-	if assert.NotNil(file) {
-		assert.Equal("/home/test/doc/readme.md", file.AbsolutePath)
+	assert.NotNil(err)
+
+}
+
+//Debería fallar porque al menos una plantilla no tiene el formato adecuado.
+func TestFillTplsFailureBadTemplate(t *testing.T) {
+	//Arrange
+	helper := NewGeneratorHelper()
+	params := createDummyParams("")
+
+	tpls := []SrcTpl{
+		createDummySrcTpl(),
+		{
+			RelativePath: "./doc/LICENCE",
+			Content:      `LICENCE dummy {{ badPlaceHolder }}`, //El formato correcto debería ser: .BadPlaceHolder
+		},
 	}
+
+	//Act
+	files, err := helper.FillTpls(tpls, params)
+
+	//Assert
+	assert := assert.New(t)
+	assert.NotNil(err)
+	assert.Nil(files)
+
+}
+
+//Debería ejecutar FillTpls y llamar el método Save del writer.
+func TestFillTplsAndSave(t *testing.T) {
+	//Arrange
+	helper := NewGeneratorHelper()
+	writer := new(MyMockedWriter)
+	params := createDummyParams("")
+
+	tpls := []SrcTpl{
+		createDummySrcTpl(),
+		{
+			RelativePath: "./doc/LICENCE",
+			Content:      `LICENCE dummy`,
+		},
+	}
+
+	//set expectations
+	writer.On("Save", mock.Anything).Return([]SrcFile{
+		{
+			AbsolutePath: "/home/test/doc/LICENCE",
+			Content:      `LICENCE dummy`,
+		},
+	}, nil)
+
+	//Act
+	files, err := helper.FillTplsAndSave(tpls, params, writer)
+
+	//Assert
+	assert := assert.New(t)
+	writer.AssertCalled(t, "Save", mock.Anything)
+	assert.NotNil(files)
+	assert.Nil(err)
 }

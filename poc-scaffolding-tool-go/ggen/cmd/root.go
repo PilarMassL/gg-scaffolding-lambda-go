@@ -10,9 +10,8 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "ggen",
 	Short: "Generador de funciones lambda con Go. hecho con ❤️ por el GG.",
-	Long: `Construya soluciones serverless
-	con funciones lambda basadas en Go usando una arquitectura hexagonal y buenas prácticas
-	sugeridas por el GG.`,
+	Long: `Construya soluciones serverless con funciones lambda basadas en Go usando una arquitectura hexagonal 
+y buenas prácticas sugeridas por el GG.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

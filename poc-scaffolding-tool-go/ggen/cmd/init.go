@@ -41,20 +41,16 @@ func initProyect(name string) {
 	cobra.CheckErr(err)
 
 	//Construímos todos los objetos que se requieren para la generación.
-	helper := generators.NewGeneratorHelper()
-	writer := generators.NewGeneratorWriter()
-	projectGenerator := project.NewProjectGenerator(helper, wd)
+	writer := generators.NewDiskWriter(wd)
+	projectGenerator := project.NewProjectGenerator(writer)
 
 	//Mapeamos los argumentos a Params.
 	params := project.ProjectParams{
-		ProjectName: "name",
+		ProjectName: name,
 	}
 
 	//Generamos el código fuente.
-	srcFiles, err := projectGenerator.Generate(params)
-	cobra.CheckErr(err)
-
-	//Salvamos en el disco, el código fuente generado.
-	writer.Save(srcFiles)
+	_, errGenerating := projectGenerator.Generate(params)
+	cobra.CheckErr(errGenerating)
 
 }

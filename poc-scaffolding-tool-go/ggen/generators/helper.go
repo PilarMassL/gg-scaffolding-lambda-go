@@ -2,7 +2,7 @@ package generators
 
 import (
 	"bytes"
-	"fmt"
+	"log"
 	"text/template"
 )
 
@@ -28,10 +28,9 @@ func (g *GeneratorHelperDefault) ValidateName(name string) string {
 // del desarrollador del generador garantizar ésta coherencia.
 //
 // También permite construir la ruta absoluta a partir de:
-// - wd: Directorio de trabajo, que es donde se van a guardar los archivos generados.
 // - tpl.RelativePath: Ruta relativa del archivo fuente dentro del directorio de trabajo.
 //   Normalmente debe tener el formato: './dir1/dir2/file.ext' (siempre arranca con punto)
-func (g *GeneratorHelperDefault) FillTpl(tpl SrcTpl, params interface{}, wd string) (SrcFile, error) {
+func (g *GeneratorHelperDefault) FillTpl(tpl SrcTpl, params interface{}) (SrcTpl, error) {
 
 	var srcContent bytes.Buffer
 
@@ -41,44 +40,50 @@ func (g *GeneratorHelperDefault) FillTpl(tpl SrcTpl, params interface{}, wd stri
 	//Se crea la plantilla.
 	t, errCreatingTpl := template.New(tpl.RelativePath).Parse(tpl.Content)
 	if errCreatingTpl != nil {
-		return SrcFile{}, errCreatingTpl
+		return SrcTpl{}, errCreatingTpl
 	}
 	//Se mapean los parámetros
 	errMappingTpl := t.Execute(&srcContent, params)
 	if errMappingTpl != nil {
-		return SrcFile{}, errMappingTpl
+		return SrcTpl{}, errMappingTpl
 	}
 
-	srcFile := SrcFile{
-		//Lo primero que debemos hacer es qutar el punto inicial de la ruta relativa
-		AbsolutePath: fmt.Sprintf("%s%s", wd, trimLeftChar(tpl.RelativePath)),
+	srcTpl := SrcTpl{
+		RelativePath: tpl.RelativePath,
 		Content:      srcContent.String(),
 	}
-	return srcFile, nil
+	return srcTpl, nil
 }
 
 // FillTpls rellena un arreglo de plantillas con los valores especificados en el argumento 'params'.
-func (g *GeneratorHelperDefault) FillTpls(tpls []SrcTpl, params interface{}, wd string) ([]SrcFile, error) {
+func (g *GeneratorHelperDefault) FillTpls(tpls []SrcTpl, params interface{}) ([]SrcTpl, error) {
 
-	files := make([]SrcFile, 0, len(tpls))
+	tplsFilled := make([]SrcTpl, 0, len(tpls))
 
-	//Mapeamos las plantillas SrcFile útilizando el helper
+	//Mapeamos las plantillas SrcFile útilizando FillTpl
 	for _, tpl := range tpls {
-		file, err := g.FillTpl(tpl, params, wd)
+		tplFilled, err := g.FillTpl(tpl, params)
 		if err != nil {
 			return nil, err
 		}
-		files = append(files, file)
+		tplsFilled = append(tplsFilled, tplFilled)
+		log.Printf("[Generator] plantilla '%s' rellenada correctamente.", tpl.RelativePath)
 	}
-	return files, nil
+	return tplsFilled, nil
 }
 
-// trimLeftChar: remueve el primer carácter de una cádena de carácteres.
-func trimLeftChar(s string) string {
-	for i := range s {
-		if i > 0 {
-			return s[i:]
-		}
+// FillTplsAndSave rellena un arreglo de plantillas y lo guarda (EFECTO COLATERAL) usando un Writer
+func (g *GeneratorHelperDefault) FillTplsAndSave(tpls []SrcTpl, params interface{}, writer Writer) ([]SrcFile, error) {
+	// Rellenamos las plantillas.
+	tplsFilled, errFillingTpls := g.FillTpls(tpls, params)
+	if errFillingTpls != nil {
+		return nil, errFillingTpls
 	}
-	return s[:0]
+
+	// Guardamos los archivos generados.
+	files, errSavingFiles := writer.Save(tplsFilled)
+	if errSavingFiles != nil {
+		return nil, errSavingFiles
+	}
+	return files, nil
 }
