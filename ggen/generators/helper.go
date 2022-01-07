@@ -35,7 +35,7 @@ func (g *GeneratorHelperDefault) FillTpl(tpl SrcTpl, params interface{}) (SrcTpl
 	var srcContent bytes.Buffer
 
 	//Nota: es posible que ésta no sea la manera más eficiente de usar las plantillas.
-	//Por el momento nos preocupamos del aspecto funcional y no tando del rendimiento.
+	//Por el momento nos preocupamos del aspecto funcional y no tanto del rendimiento.
 
 	//Se crea la plantilla.
 	t, errCreatingTpl := template.New(tpl.RelativePath).Parse(tpl.Content)

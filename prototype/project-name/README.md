@@ -69,5 +69,6 @@ TODO
 #### `/internal/port`
 
 ## References
-- https://github.com/golang-standards/project-layout/blob/master/README_es.md
-- https://go.dev/doc/effective_go#names
+
+* <https://github.com/golang-standards/project-layout/blob/master/README_es.md>
+* <https://go.dev/doc/effective_go#names>

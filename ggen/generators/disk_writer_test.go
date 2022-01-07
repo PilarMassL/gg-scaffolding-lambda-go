@@ -48,7 +48,7 @@ func TestDiskSaveSuccess(t *testing.T) {
 	}
 }
 
-// Debería actualizar el campo 'AbsolutPath' de los objetos SrcFile con la ruta en la que fue almacenado.
+// Debería actualizar el campo 'AbsolutePath' de los objetos SrcFile con la ruta en la que fue almacenado.
 func TestUpdateAbsolutePath(t *testing.T) {
 	//Arrange
 	//Se crea una carpeta temporal

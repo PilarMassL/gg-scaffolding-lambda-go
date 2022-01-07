@@ -51,8 +51,8 @@ func TestFillTplsSuccess(t *testing.T) {
 	tpls := []SrcTpl{
 		createDummySrcTpl(),
 		{
-			RelativePath: "./doc/LICENCE",
-			Content:      `LICENCE dummy`,
+			RelativePath: "./doc/LICENSE",
+			Content:      `LICENSE dummy`,
 		},
 	}
 
@@ -94,8 +94,8 @@ func TestFillTplFailureBadTemplate(t *testing.T) {
 	params := createDummyParams("")
 
 	tpl := SrcTpl{
-		RelativePath: "./doc/LICENCE",
-		Content:      `LICENCE dummy {{ badPlaceholder }}`, //El formato correcto debería ser: .BadPlaceHolder
+		RelativePath: "./doc/LICENSE",
+		Content:      `LICENSE dummy {{ badPlaceholder }}`, //El formato correcto debería ser: .BadPlaceHolder
 	}
 
 	//Act
@@ -116,8 +116,8 @@ func TestFillTplsFailureBadTemplate(t *testing.T) {
 	tpls := []SrcTpl{
 		createDummySrcTpl(),
 		{
-			RelativePath: "./doc/LICENCE",
-			Content:      `LICENCE dummy {{ badPlaceHolder }}`, //El formato correcto debería ser: .BadPlaceHolder
+			RelativePath: "./doc/LICENSE",
+			Content:      `LICENSE dummy {{ badPlaceHolder }}`, //El formato correcto debería ser: .BadPlaceHolder
 		},
 	}
 
@@ -141,16 +141,16 @@ func TestFillTplsAndSave(t *testing.T) {
 	tpls := []SrcTpl{
 		createDummySrcTpl(),
 		{
-			RelativePath: "./doc/LICENCE",
-			Content:      `LICENCE dummy`,
+			RelativePath: "./doc/LICENSE",
+			Content:      `LICENSE dummy`,
 		},
 	}
 
 	//set expectations
 	writer.On("Save", mock.Anything).Return([]SrcFile{
 		{
-			AbsolutePath: "/home/test/doc/LICENCE",
-			Content:      `LICENCE dummy`,
+			AbsolutePath: "/home/test/doc/LICENSE",
+			Content:      `LICENSE dummy`,
 		},
 	}, nil)
 

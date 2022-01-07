@@ -20,12 +20,12 @@ func NewDiskWriter(workingDirectory string) *DiskWriter {
 func (w *DiskWriter) Save(tplsFilled []SrcTpl) ([]SrcFile, error) {
 	filesSaved := make([]SrcFile, 0, len(tplsFilled))
 	for _, tplFilled := range tplsFilled {
-		fileWithAbsolutPathUpdated := updateFileAbsolutePath(tplFilled, w.wd)
-		err := saveFile(fileWithAbsolutPathUpdated)
+		fileWithAbsolutePathUpdated := updateFileAbsolutePath(tplFilled, w.wd)
+		err := saveFile(fileWithAbsolutePathUpdated)
 		if err != nil {
 			return nil, err
 		}
-		filesSaved = append(filesSaved, fileWithAbsolutPathUpdated)
+		filesSaved = append(filesSaved, fileWithAbsolutePathUpdated)
 	}
 	return filesSaved, nil
 }
@@ -52,7 +52,7 @@ func saveFile(file SrcFile) error {
 	return nil
 }
 
-// trimLeftChar: remueve el primer carácter de una cádena de carácteres.
+// trimLeftChar: remueve el primer carácter de una cadena de caracteres.
 func trimLeftChar(s string) string {
 	for i := range s {
 		if i > 0 {
