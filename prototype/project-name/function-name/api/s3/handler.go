@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"log"
+	"errors"
 	"repo-name/project-name/function-name/internal/domain"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -10,30 +10,43 @@ import (
 )
 
 type S3EventHandler struct {
-	service *domain.FunctionNameService
+	service *domain.FunctionNameDemoS3Service
 }
 
-func NewS3EventHandler(service *domain.FunctionNameService) *S3EventHandler {
+func NewS3EventHandler(service *domain.FunctionNameDemoS3Service) *S3EventHandler {
 	return &S3EventHandler{
 		service: service,
 	}
 }
 
-func (h *S3EventHandler) Handler(request events.S3Event) error {
+func (h *S3EventHandler) Handler(event events.S3Event) error {
 	// events.S3Event -> Objeto de Dominio ->
-	// Invocar al servicio interno de dominio -> ?
+	// Invocar al servicio interno de dominio
 
 	logger, _ := zap.NewProduction()
 
-	// Invocamos al servicio interno de dominio
-	resp, err := h.service.GetMyIp()
-
+	//Obtenemos el nombre del archivo que se agregó:
+	newFile, err := extractObjectKey(event)
 	if err != nil {
-		logger.Error("Fail obtaining My Ip")
-		return err // ?
+		logger.Error(err.Error())
+		return err
 	}
 
-	// transformamos al tipo events.?
-	log.Printf("La respuesta obtenida del servicio es: %s", resp)
+	// Invocamos al servicio interno de dominio
+	errCipher := h.service.AppendTimestamp(newFile)
+
+	if errCipher != nil {
+		logger.Error(errCipher.Error())
+		return errCipher
+	}
+	logger.Info("Se terminó el proceso correctamente")
 	return nil
+}
+
+func extractObjectKey(event events.S3Event) (string, error) {
+	records := event.Records
+	for _, r := range records {
+		return r.S3.Object.Key, nil //Enviamos el primero que encontramos
+	}
+	return "", errors.New("no key found")
 }

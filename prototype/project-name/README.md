@@ -10,6 +10,7 @@ You will need the following things properly installed on your computer.
 * [Git](http://git-scm.com/)
 * [Go](https://golang.org/)
 * [Make](https://www.gnu.org/software/make/)
+* [SAM](https://aws.amazon.com/es/serverless/sam/)
 
 ## Installation
 
@@ -24,18 +25,18 @@ Following you can find the instructions:
 
 Run `make lambda` to build the project. The build artifacts will be stored in the `./function-name/dist/` directory if you ran the second option.
 
-## Run App
+## Run `function-name`
 
 Run `go run function-name/cmd/main.go` on the app root directory.
 
 Running with SAM:
 
-```
-echo '{}' | sam local invoke FunctionName --event - 
+```sh
+sam local invoke FunctionName --event ./events/function-name-http-event.json
 ```
 
-```
-sam local invoke FunctionName --event ./events/function-name-event.json
+```sh
+sam local invoke FunctionName --event ./events/function-name-s3-event.json
 ```
 
 ## Running unit tests
@@ -50,7 +51,7 @@ Run `make fmt` to execute the format check.
 
 Run `make lint` to execute linter verify.
 
-## Project Layout
+## Function Project Layout: Hexagonal Architecture
 
 TODO
 
