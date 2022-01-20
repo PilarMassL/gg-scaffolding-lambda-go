@@ -11,16 +11,20 @@ import (
 
 func main() {
 	logger, _ := zap.NewProduction()
-	logger.Info("Lambda starts")
+	logger.Info("Iniciando componentes")
 	//Aquí se hace la inyección de las dependencias.
-	//myIpClientUsingAws := adapter.NewMyIpClientUsingAws()
-	//myFunctionNameService := domain.NewFunctionNameService(myIpClientUsingAws)
-	//myHttpHandler := http.NewHttpHandler(myFunctionNameService)
-	//lambda.Start(myHttpHandler.Handler)
 
+	//Se crean los adaptadores
+	myIpClientUsingAws := adapter.NewMyIpClientUsingAws()
 	myStorageUsingS3 := adapter.NewMyStorageUsingS3()
-	myFunctionNameDemoS3Service := domain.NewFunctionNameDemoS3Service(myStorageUsingS3)
-	myS3EventHandler := s3.NewS3EventHandler(myFunctionNameDemoS3Service)
 
-	lambda.Start(myS3EventHandler.Handler)
+	//El servicio raíz de la función
+	myFunctionNameService := domain.NewFunctionNameService(myIpClientUsingAws, myStorageUsingS3)
+
+	// El handler que manejará el evento que dispara la función. Ej: evento s3, apigw trigger.
+	myHandler := s3.NewS3EventHandler(myFunctionNameService)
+	//myHandler := http.NewHttpHandler(myFunctionNameService)
+
+	logger.Info("Iniciando función")
+	lambda.Start(myHandler.Handler)
 }

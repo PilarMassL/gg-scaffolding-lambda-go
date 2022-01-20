@@ -13,24 +13,30 @@ import (
 )
 
 const (
-	AWS_S3_REGION = "us-east-2"   // Region
+	AWS_REGION    = "AWS_REGION"
 	AWS_S3_BUCKET = "test-web-s3" // Bucket
 )
 
-type MyStorageUsingS3 struct {
+type MyStorageUsingS3 struct { //Debería incluir el nombre del bucket.
 	awsS3Client *s3.Client
+	ctx         aws.Context
 }
 
 func NewMyStorageUsingS3() *MyStorageUsingS3 {
+	return NewMyStorageUsingS3WithContext(context.TODO())
+}
+
+func NewMyStorageUsingS3WithContext(ctx aws.Context) *MyStorageUsingS3 {
 	return &MyStorageUsingS3{
-		awsS3Client: configS3(),
+		awsS3Client: configS3(ctx),
+		ctx:         ctx,
 	}
 }
 
 func (s *MyStorageUsingS3) PutFile(key string, content []byte) error {
 	r := bytes.NewReader(content)
 	uploader := manager.NewUploader(s.awsS3Client)
-	_, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+	_, err := uploader.Upload(s.ctx, &s3.PutObjectInput{
 		Bucket: aws.String(AWS_S3_BUCKET),
 		Key:    aws.String(key),
 		Body:   r,
@@ -45,7 +51,7 @@ func (s *MyStorageUsingS3) GetFile(key, version string) ([]byte, error) {
 	awsKey := aws.String(key)
 
 	// Intentamos obtener el HeadObject para saber el tamaño del archivo a cargar en memoria.
-	headObject, errHeadObject := s.awsS3Client.HeadObject(context.TODO(), &s3.HeadObjectInput{
+	headObject, errHeadObject := s.awsS3Client.HeadObject(s.ctx, &s3.HeadObjectInput{
 		Bucket: awsBucket,
 		Key:    awsKey,
 	})
@@ -58,7 +64,7 @@ func (s *MyStorageUsingS3) GetFile(key, version string) ([]byte, error) {
 	w := manager.NewWriteAtBuffer(buf)
 	// download file into the memory
 
-	numBytes, err := downloader.Download(context.TODO(), w, &s3.GetObjectInput{
+	numBytes, err := downloader.Download(s.ctx, w, &s3.GetObjectInput{
 		Bucket: awsBucket,
 		Key:    awsKey,
 	})
@@ -69,8 +75,11 @@ func (s *MyStorageUsingS3) GetFile(key, version string) ([]byte, error) {
 	return w.Bytes(), nil
 }
 
-func configS3() *s3.Client {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(AWS_S3_REGION))
+func configS3(ctx aws.Context) *s3.Client {
+	// :warning: Suponemos que el Bucket se encuentra en la misma región que la función.
+	// Obtenemos la región de la variable de entorno por defecto de la función.
+	awsS3RegionDefault := os.Getenv(AWS_REGION)
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsS3RegionDefault))
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)

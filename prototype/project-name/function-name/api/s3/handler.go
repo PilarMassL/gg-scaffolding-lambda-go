@@ -1,6 +1,7 @@
 package s3
 
 import (
+	"context"
 	"errors"
 	"repo-name/project-name/function-name/internal/domain"
 
@@ -10,16 +11,16 @@ import (
 )
 
 type S3EventHandler struct {
-	service *domain.FunctionNameDemoS3Service
+	service *domain.FunctionNameService
 }
 
-func NewS3EventHandler(service *domain.FunctionNameDemoS3Service) *S3EventHandler {
+func NewS3EventHandler(service *domain.FunctionNameService) *S3EventHandler {
 	return &S3EventHandler{
 		service: service,
 	}
 }
 
-func (h *S3EventHandler) Handler(event events.S3Event) error {
+func (h *S3EventHandler) Handler(ctx context.Context, event events.S3Event) error {
 	// events.S3Event -> Objeto de Dominio ->
 	// Invocar al servicio interno de dominio
 

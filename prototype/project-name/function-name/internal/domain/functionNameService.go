@@ -7,17 +7,23 @@ import (
 	"time"
 )
 
-type FunctionNameDemoS3Service struct {
-	myStorage port.MyStoragePort
+type FunctionNameService struct {
+	myIpClient port.MyIpClientPort
+	myStorage  port.MyStoragePort
 }
 
-func NewFunctionNameDemoS3Service(storage port.MyStoragePort) *FunctionNameDemoS3Service {
-	return &FunctionNameDemoS3Service{
-		myStorage: storage,
+func NewFunctionNameService(client port.MyIpClientPort, storage port.MyStoragePort) *FunctionNameService {
+	return &FunctionNameService{
+		myIpClient: client,
+		myStorage:  storage,
 	}
 }
 
-func (s *FunctionNameDemoS3Service) AppendTimestamp(filename string) error {
+func (s *FunctionNameService) GetMyIp() (string, error) {
+	return s.myIpClient.GetIp()
+}
+
+func (s *FunctionNameService) AppendTimestamp(filename string) error {
 	log.Printf("Intentamos obtener el archivo: %s", filename)
 	// Intentamos abrir el archivo
 	content, err := s.myStorage.GetFile(filename, "1")
