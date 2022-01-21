@@ -14,10 +14,10 @@ var (
 	defaultHTTPGetAddress = "https://checkip.amazonaws.com"
 
 	// ErrNoIP No IP found in response
-	errNoIP = errors.New("No IP in HTTP response")
+	errNoIP = errors.New("no IP in HTTP response")
 
 	// ErrNon200Response non 200 status code in response
-	errNon200Response = errors.New("Non 200 Response found")
+	errNon200Response = errors.New("non 200 Response found")
 )
 
 func NewMyIpClientUsingAws() *MyIpClientUsingAws {

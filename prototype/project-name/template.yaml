@@ -22,3 +22,4 @@ Resources:
       Environment:
         Variables:
           ENVIRONMENT: 'dev'
+          AWS_REGION:  'us-east-2'
