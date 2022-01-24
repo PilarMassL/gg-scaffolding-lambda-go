@@ -1,4 +1,4 @@
-package generators
+package services
 
 import (
 	"bytes"
@@ -12,12 +12,6 @@ type GeneratorHelperDefault struct {
 
 func NewGeneratorHelper() *GeneratorHelperDefault {
 	return &GeneratorHelperDefault{}
-}
-
-//ValidateName permite validar si un nombre cumple con los requisitos necesarios para nombrar
-//un elemento dentro de go.
-func (g *GeneratorHelperDefault) ValidateName(name string) string {
-	return ""
 }
 
 // FillTpl rellena una plantilla con los valores especificados en el argumento 'params'.

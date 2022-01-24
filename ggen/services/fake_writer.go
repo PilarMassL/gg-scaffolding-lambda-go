@@ -1,4 +1,4 @@
-package generators
+package services
 
 // FakeWriter define un objeto que se comporta como un Writer pero no guarda nada. USAR SOLO PARA PRUEBAS.
 type FakeWriter struct {

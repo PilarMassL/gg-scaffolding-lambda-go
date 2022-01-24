@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
 )
 
 // initCmd representa el comando para iniciar un proyecto basado en funciones.
@@ -41,7 +41,7 @@ func initProject(name string) {
 	cobra.CheckErr(err)
 
 	//Construimos todos los objetos que se requieren para la generación.
-	writer := generators.NewDiskWriter(wd)
+	writer := services.NewDiskWriter(wd)
 	projectGenerator := project.NewProjectGenerator(writer)
 
 	//Pasamos los argumentos a Params.

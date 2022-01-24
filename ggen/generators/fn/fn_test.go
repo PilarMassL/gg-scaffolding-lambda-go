@@ -14,10 +14,10 @@ func TestGenerateSuccess(t *testing.T) {
 	//Arrange
 	//El Writer agrega el efecto colateral, por eso se decide usar FakeWriter.
 	writer := services.NewFakeWriter()
-	generator := NewProjectGenerator(writer)
+	generator := NewFnGenerator(writer)
 
-	params := ProjectParams{
-		ProjectName: "MyProject",
+	params := FnParams{
+		FnName: "MyFunction",
 	}
 
 	//Act

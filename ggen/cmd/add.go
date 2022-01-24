@@ -12,7 +12,9 @@ var addCmd = &cobra.Command{
 	Short: "Permite agregar un nuevo elemento de arquitectura",
 	Long: `Permite agregar un nuevo elemento de arquitectura:
 
-fn:   agrega una nueva función.`,
+fn:   agrega una nueva función.
+port: agrega un nuevo puerto/adaptador a una función.
+svc:  agrega un nuevo servicio de dominio a la función.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("add invocado")
 	},

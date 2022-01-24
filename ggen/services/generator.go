@@ -1,4 +1,4 @@
-package generators
+package services
 
 // SrcTpl representa una plantilla de código fuente
 type SrcTpl struct {
@@ -19,7 +19,6 @@ type Generator interface {
 
 // GeneratorHelper define un objeto que permite realizar operaciones útiles para construir generadores.
 type GeneratorHelper interface {
-	ValidateName(name string) string
 	FillTpl(tpl SrcTpl, params interface{}) (SrcTpl, error)
 	FillTpls(tpls []SrcTpl, params interface{}) ([]SrcTpl, error)                        //FillTpl sobre una lista
 	FillTplsAndSave(tpls []SrcTpl, params interface{}, writer Writer) ([]SrcFile, error) //FillTpls + Save (Efecto lateral)
