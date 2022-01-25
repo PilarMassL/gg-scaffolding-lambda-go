@@ -48,6 +48,22 @@ func (nc *NamingConventionsHelper) IsKebabCase(name string) bool {
 	return checkNameWithRegex(name, nc.reKebabCase)
 }
 
+func (nc *NamingConventionsHelper) ToCamelCase(name string) (string, error) {
+	return name, nil
+}
+
+func (nc *NamingConventionsHelper) ToPascalCase(name string) (string, error) {
+	return name, nil
+}
+
+func (nc *NamingConventionsHelper) ToKebabCase(name string) (string, error) {
+	return name, nil
+}
+
+func (nc *NamingConventionsHelper) ToSnakeCase(name string) (string, error) {
+	return name, nil
+}
+
 func checkNameWithRegex(name string, re *regexp.Regexp) bool {
 	found := re.FindString(name)
 	if found == "" || found != name {
