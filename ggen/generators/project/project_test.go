@@ -4,8 +4,12 @@ import (
 	"testing"
 
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project/testdata"
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/utils"
+
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/services/generator"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/services/writer"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/utils"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,10 +17,11 @@ import (
 func TestGenerateSuccess(t *testing.T) {
 	//Arrange
 	//El Writer agrega el efecto colateral, por eso se decide usar FakeWriter.
-	writer := services.NewFakeWriter()
-	generator := NewProjectGenerator(writer)
+	writer := writer.NewFakeWriter()
+	generatorBase := generator.NewGeneratorSvc(writer)
+	generator := NewProjectGenerator(generatorBase)
 
-	params := ProjectParams{
+	params := ProjectPromptParams{
 		ProjectName: "MyProject",
 	}
 
@@ -27,7 +32,7 @@ func TestGenerateSuccess(t *testing.T) {
 	assert := assert.New(t)
 	assert.Nil(err)
 	if assert.NotNil(actualFiles) {
-		expectedFiles := []services.SrcFile{
+		expectedFiles := []models.SrcFile{
 			testdata.ExpectedReadMePopulated(),
 		}
 		utils.AssertSrcFilesEqual(assert, expectedFiles, actualFiles)

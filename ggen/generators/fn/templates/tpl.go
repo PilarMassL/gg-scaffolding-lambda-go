@@ -1,10 +1,10 @@
 package templates
 
-import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
+import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 
-func DummyReadMe() services.SrcTpl {
-	return services.SrcTpl{
-		RelativePath: "./{{ .FunctionNameKebabCase}}/readme.md",
+func DummyReadMe() models.SrcTpl {
+	return models.SrcTpl{
+		RelativePath: "./my-function-hello-world/readme.md",
 		Content: `
 # {{ .FunctionNamePascalCase }}
 Mi primera función usando el gg.

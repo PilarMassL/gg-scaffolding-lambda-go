@@ -1,9 +1,9 @@
 package templates
 
-import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
+import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 
-func ReadMe() services.SrcTpl {
-	return services.SrcTpl{
+func ReadMe() models.SrcTpl {
+	return models.SrcTpl{
 		RelativePath: "./readme.md",
 		Content: `
 # {{ .ProjectName }}

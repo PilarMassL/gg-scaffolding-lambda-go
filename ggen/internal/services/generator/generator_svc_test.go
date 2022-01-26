@@ -1,10 +1,12 @@
-package services
+package generator
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 )
 
 /*
@@ -21,9 +23,9 @@ type MyMockedWriter struct {
 }
 
 // Se implementa la interfaz generators.Writer
-func (m *MyMockedWriter) Save(tplsFilled []SrcTpl) ([]SrcFile, error) {
+func (m *MyMockedWriter) Save(tplsFilled []models.SrcTpl) ([]models.SrcFile, error) {
 	args := m.Called(tplsFilled)
-	return args.Get(0).([]SrcFile), args.Error(1)
+	return args.Get(0).([]models.SrcFile), args.Error(1)
 }
 
 /*
@@ -36,8 +38,8 @@ func createDummyParams(titulo string) *DummyParams {
 	}
 }
 
-func createDummySrcTpl() SrcTpl {
-	return SrcTpl{
+func createDummySrcTpl() models.SrcTpl {
+	return models.SrcTpl{
 		RelativePath: "./doc/readme.md",
 		Content:      `# {{ .Titulo }} Hola mundo`,
 	}
@@ -47,8 +49,10 @@ func createDummySrcTpl() SrcTpl {
 // debe ser igual al del arreglo de entrada.
 func TestFillTplsSuccess(t *testing.T) {
 	//Arrange
-	helper := NewGeneratorHelper()
-	tpls := []SrcTpl{
+	writer := new(MyMockedWriter)
+	gen := NewGeneratorSvc(writer)
+
+	tpls := []models.SrcTpl{
 		createDummySrcTpl(),
 		{
 			RelativePath: "./doc/LICENSE",
@@ -59,7 +63,7 @@ func TestFillTplsSuccess(t *testing.T) {
 	params := createDummyParams("Titulo:")
 
 	//Act
-	files, err := helper.FillTpls(tpls, params)
+	files, err := gen.FillTpls(tpls, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -72,12 +76,14 @@ func TestFillTplsSuccess(t *testing.T) {
 // Debería llenar una plantilla con los parámetros especificados
 func TestFillTplSuccess(t *testing.T) {
 	//Arrange
-	helper := NewGeneratorHelper()
+	writer := new(MyMockedWriter)
+	gen := NewGeneratorSvc(writer)
+
 	tpl := createDummySrcTpl()
 	params := createDummyParams("Titulo:")
 
 	//Act
-	file, err := helper.FillTpl(tpl, params)
+	file, err := gen.FillTpl(tpl, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -90,16 +96,18 @@ func TestFillTplSuccess(t *testing.T) {
 //Debería fallar porque la plantilla no tiene el formato adecuado.
 func TestFillTplFailureBadTemplate(t *testing.T) {
 	//Arrange
-	helper := NewGeneratorHelper()
+	writer := new(MyMockedWriter)
+	gen := NewGeneratorSvc(writer)
+
 	params := createDummyParams("")
 
-	tpl := SrcTpl{
+	tpl := models.SrcTpl{
 		RelativePath: "./doc/LICENSE",
 		Content:      `LICENSE dummy {{ badPlaceholder }}`, //El formato correcto debería ser: .BadPlaceHolder
 	}
 
 	//Act
-	_, err := helper.FillTpl(tpl, params)
+	_, err := gen.FillTpl(tpl, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -110,10 +118,12 @@ func TestFillTplFailureBadTemplate(t *testing.T) {
 //Debería fallar porque al menos una plantilla no tiene el formato adecuado.
 func TestFillTplsFailureBadTemplate(t *testing.T) {
 	//Arrange
-	helper := NewGeneratorHelper()
+	writer := new(MyMockedWriter)
+	gen := NewGeneratorSvc(writer)
+
 	params := createDummyParams("")
 
-	tpls := []SrcTpl{
+	tpls := []models.SrcTpl{
 		createDummySrcTpl(),
 		{
 			RelativePath: "./doc/LICENSE",
@@ -122,7 +132,7 @@ func TestFillTplsFailureBadTemplate(t *testing.T) {
 	}
 
 	//Act
-	files, err := helper.FillTpls(tpls, params)
+	files, err := gen.FillTpls(tpls, params)
 
 	//Assert
 	assert := assert.New(t)
@@ -134,11 +144,12 @@ func TestFillTplsFailureBadTemplate(t *testing.T) {
 //Debería ejecutar FillTpls y llamar el método Save del writer.
 func TestFillTplsAndSave(t *testing.T) {
 	//Arrange
-	helper := NewGeneratorHelper()
+
 	writer := new(MyMockedWriter)
+	gen := NewGeneratorSvc(writer)
 	params := createDummyParams("")
 
-	tpls := []SrcTpl{
+	tpls := []models.SrcTpl{
 		createDummySrcTpl(),
 		{
 			RelativePath: "./doc/LICENSE",
@@ -147,7 +158,7 @@ func TestFillTplsAndSave(t *testing.T) {
 	}
 
 	//set expectations
-	writer.On("Save", mock.Anything).Return([]SrcFile{
+	writer.On("Save", mock.Anything).Return([]models.SrcFile{
 		{
 			AbsolutePath: "/home/test/doc/LICENSE",
 			Content:      `LICENSE dummy`,
@@ -155,7 +166,7 @@ func TestFillTplsAndSave(t *testing.T) {
 	}, nil)
 
 	//Act
-	files, err := helper.FillTplsAndSave(tpls, params, writer)
+	files, err := gen.FillTplsAndSave(tpls, params)
 
 	//Assert
 	assert := assert.New(t)

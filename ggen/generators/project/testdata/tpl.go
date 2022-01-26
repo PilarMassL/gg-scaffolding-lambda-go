@@ -1,13 +1,13 @@
 package testdata
 
-import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
+import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 
 /*
  Archivos fuente rellenando usando las plantillas con datos de prueba.
 */
 
-func ExpectedReadMePopulated() services.SrcFile {
-	return generators.SrcFile{
+func ExpectedReadMePopulated() models.SrcFile {
+	return models.SrcFile{
 		AbsolutePath: "./readme.md",
 		Content: `
 # MyProject

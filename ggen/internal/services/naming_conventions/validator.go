@@ -1,8 +1,8 @@
-package services
+package naming_conventions
 
-// NamingConventionsValidator define las operaciones para validar si una determinada cadena
+// Validator define las operaciones para validar si una determinada cadena
 // cumple con alguno de los tipo de convenciones de nombramiento.
-type NamingConventionsValidator interface {
+type Validator interface {
 	IsCamelCase(name string) bool
 	IsPascalCase(nae string) bool
 	IsKebabCase(name string) bool

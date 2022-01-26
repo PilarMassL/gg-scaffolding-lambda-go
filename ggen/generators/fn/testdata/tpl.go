@@ -1,24 +1,24 @@
 package testdata
 
-import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/services"
+import "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 
 /*
  Archivos fuente rellenando usando las plantillas con datos de prueba.
 */
 
-func ExpectedDummyReadMePopulated() services.SrcFile {
-	return services.SrcFile{
-		AbsolutePath: "./my-function/readme.md",
+func ExpectedDummyReadMePopulated() models.SrcFile {
+	return models.SrcFile{
+		AbsolutePath: "./my-function-hello-world/readme.md",
 		Content: `
-# MyFunction
+# MyFunctionHelloWorld
 Mi primera función usando el gg.
 
 A continuación mostramos el nombre de la función en distintas convenciones:
 
-- Camel Case: myFunction
-- Pascal Case: MyFunction
-- Kebab Case: my-function
-- Snake Case: my_function
+- Camel Case: myFunctionHelloWorld
+- Pascal Case: MyFunctionHelloWorld
+- Kebab Case: my-function-hello-world
+- Snake Case: my_function_hello_world
 `,
 	}
 }
