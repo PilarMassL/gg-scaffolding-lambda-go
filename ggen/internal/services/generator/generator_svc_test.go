@@ -107,11 +107,12 @@ func TestFillTplFailureBadTemplate(t *testing.T) {
 	}
 
 	//Act
-	_, err := gen.FillTpl(tpl, params)
+	tplFilled, err := gen.FillTpl(tpl, params)
 
 	//Assert
 	assert := assert.New(t)
 	assert.NotNil(err)
+	assert.Nil(tplFilled)
 
 }
 

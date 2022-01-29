@@ -69,7 +69,7 @@ func (f *FormatterSvc) ToSnakeCase(name string) string {
 		// Pascal -> Camel -> Snake
 		return f.camel2Snake(lowerFirst(name))
 	}
-	return name
+	return replace(strings.ToLower(name), " ", "_")
 }
 
 func (f *FormatterSvc) ToKebabCase(name string) string {
@@ -84,7 +84,7 @@ func (f *FormatterSvc) ToKebabCase(name string) string {
 		// Pascal -> Camel -> Snake -> Kebab
 		return replace(f.camel2Snake(lowerFirst(name)), "_", "-")
 	}
-	return name
+	return replace(strings.ToLower(name), " ", "-")
 }
 
 func (f *FormatterSvc) camel2Snake(name string) string {
@@ -124,27 +124,21 @@ func replace(s, old, new string) string {
 }
 
 func lowerFirst(s string) string {
-	if len(s) < 2 {
-		return strings.ToLower(s)
-	}
-
+	// Nota: s debe tener al menos 1 carácter.
 	bts := []byte(s)
 
-	lc := bytes.ToLower([]byte{bts[0]})
+	fc := bytes.ToLower([]byte{bts[0]})
 	rest := bts[1:]
 
-	return string(bytes.Join([][]byte{lc, rest}, nil))
+	return string(bytes.Join([][]byte{fc, rest}, nil))
 }
 
 func upperFirst(s string) string {
-	if len(s) < 2 {
-		return strings.ToUpper(s)
-	}
-
+	// Nota: s debe tener al menos 1 carácter.
 	bts := []byte(s)
 
-	lc := bytes.ToUpper([]byte{bts[0]})
+	fc := bytes.ToUpper([]byte{bts[0]})
 	rest := bts[1:]
 
-	return string(bytes.Join([][]byte{lc, rest}, nil))
+	return string(bytes.Join([][]byte{fc, rest}, nil))
 }

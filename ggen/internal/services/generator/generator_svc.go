@@ -30,29 +30,25 @@ func NewGeneratorSvc(writer writer.Writer) *GeneratorSvcDefault {
 // También permite construir la ruta absoluta a partir de:
 // - tpl.RelativePath: Ruta relativa del archivo fuente dentro del directorio de trabajo.
 //   Normalmente debe tener el formato: './dir1/dir2/file.ext' (siempre arranca con punto)
-func (g *GeneratorSvcDefault) FillTpl(tpl models.SrcTpl, params interface{}) (models.SrcTpl, error) {
-
-	var srcContent bytes.Buffer
+func (g *GeneratorSvcDefault) FillTpl(tpl models.SrcTpl, params interface{}) (*models.SrcTpl, error) {
 
 	//Nota: es posible que ésta no sea la manera más eficiente de usar las plantillas.
 	//Por el momento nos preocupamos del aspecto funcional y no tanto del rendimiento.
 
-	//TODO la url también puede ser una plantilla
-
-	//Se crea la plantilla.
-	t, errCreatingTpl := template.New(tpl.RelativePath).Parse(tpl.Content)
-	if errCreatingTpl != nil {
-		return models.SrcTpl{}, errCreatingTpl
-	}
-	//Se mapean los parámetros
-	errMappingTpl := t.Execute(&srcContent, params)
-	if errMappingTpl != nil {
-		return models.SrcTpl{}, errMappingTpl
+	// el path también puede ser una plantilla
+	relativePathFilled, err := fillTpl(tpl.RelativePath, tpl.RelativePath, params)
+	if err != nil {
+		return nil, err
 	}
 
-	srcTpl := models.SrcTpl{
-		RelativePath: tpl.RelativePath,
-		Content:      srcContent.String(),
+	contentFilled, err := fillTpl(relativePathFilled, tpl.Content, params)
+	if err != nil {
+		return nil, err
+	}
+
+	srcTpl := &models.SrcTpl{
+		RelativePath: relativePathFilled,
+		Content:      contentFilled,
 	}
 	return srcTpl, nil
 }
@@ -68,7 +64,7 @@ func (g *GeneratorSvcDefault) FillTpls(tpls []models.SrcTpl, params interface{})
 		if err != nil {
 			return nil, err
 		}
-		tplsFilled = append(tplsFilled, tplFilled)
+		tplsFilled = append(tplsFilled, *tplFilled)
 		log.Printf("[Generator] plantilla '%s' rellenada correctamente.", tpl.RelativePath)
 	}
 	return tplsFilled, nil
@@ -88,4 +84,19 @@ func (g *GeneratorSvcDefault) FillTplsAndSave(tpls []models.SrcTpl, params inter
 		return nil, errSavingFiles
 	}
 	return files, nil
+}
+
+func fillTpl(name, tpl string, params interface{}) (string, error) {
+	var tplFilled bytes.Buffer
+	t, err := template.New(name).Parse(tpl)
+	if err != nil {
+		return "", err
+	}
+	//Se mapean los parámetros
+	errMappingTpl := t.Execute(&tplFilled, params)
+	if errMappingTpl != nil {
+		return "", errMappingTpl
+	}
+	return tplFilled.String(), nil
+
 }

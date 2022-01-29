@@ -14,17 +14,28 @@ type FnGenerator struct {
 	formatter naming_conventions.Formatter
 }
 
-// FnParams contiene todos los parámetros necesarios para generar el esqueleto de una función.
+// FnEvents es una enumeración que indica todos los posibles eventos que pueden disparar una función
+type FnEvents int
 
+const (
+	HttpEvent FnEvents = iota
+	S3Event
+)
+
+func (fe FnEvents) String() string {
+	return []string{"Evento Http", "Evento desde S3"}[fe]
+}
+
+// FnParams contiene todos los parámetros necesarios para generar el esqueleto de una función.
 type FnPromptParams struct {
-	FnName string `prompt:"¿Cuál es el nombre de la función?"`
+	FnName  string   `prompt:"¿Cuál es el nombre de la función?" type:"input"`
+	FnEvent FnEvents `prompt:"¿Cuál es el tipo de evento que dispara la función?" type:"list"`
 }
 
 type FnParams struct {
-	FunctionNameCamelCase  string
-	FunctionNamePascalCase string
-	FunctionNameKebabCase  string
-	FunctionNameSnakeCase  string
+	FnName  string
+	FnEvent string
+	FnDir   string
 }
 
 func NewFnGenerator(generatorBase generator.GeneratorSvc) *FnGenerator {
@@ -38,6 +49,9 @@ func NewFnGenerator(generatorBase generator.GeneratorSvc) *FnGenerator {
 }
 
 func (fn *FnGenerator) Generate(params FnPromptParams) ([]models.SrcFile, error) {
+	//Es importante que al agregar una función se agreguen solo las dependencias necesarias.
+	//Solo se pueden agregar funciones a proyectos ya iniciados.
+
 	//obtenemos las plantillas
 	tpls := []models.SrcTpl{
 		templates.DummyReadMe(),
@@ -52,9 +66,8 @@ func (fn *FnGenerator) Generate(params FnPromptParams) ([]models.SrcFile, error)
 
 func (fn *FnGenerator) completeTplParams(params FnPromptParams) *FnParams {
 	return &FnParams{
-		FunctionNameCamelCase:  fn.formatter.ToCamelCase(params.FnName),
-		FunctionNamePascalCase: fn.formatter.ToPascalCase(params.FnName),
-		FunctionNameKebabCase:  fn.formatter.ToKebabCase(params.FnName),
-		FunctionNameSnakeCase:  fn.formatter.ToSnakeCase(params.FnName),
+		FnName:  fn.formatter.ToPascalCase(params.FnName),
+		FnEvent: fn.formatter.ToKebabCase(params.FnEvent.String()),
+		FnDir:   fn.formatter.ToSnakeCase(params.FnName),
 	}
 }

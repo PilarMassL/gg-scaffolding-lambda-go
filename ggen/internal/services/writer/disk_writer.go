@@ -33,9 +33,9 @@ func (w *DiskWriter) Save(tplsFilled []models.SrcTpl) ([]models.SrcFile, error) 
 }
 
 func updateFileAbsolutePath(tpl models.SrcTpl, wd string) models.SrcFile {
-	//Lo primero que debemos hacer es qutar el punto inicial de la ruta relativa
+	//Lo primero que debemos hacer es quitar el punto inicial de la ruta relativa
 	return models.SrcFile{
-		AbsolutePath: filepath.Join(wd, trimLeftChar(tpl.RelativePath)),
+		AbsolutePath: filepath.Join(wd, tpl.RelativePath),
 		Content:      tpl.Content,
 	}
 }
@@ -48,18 +48,5 @@ func saveFile(file models.SrcFile) error {
 	}
 	defer f.Close()
 	_, err = io.WriteString(f, file.Content)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// trimLeftChar: remueve el primer carácter de una cadena de caracteres.
-func trimLeftChar(s string) string {
-	for i := range s {
-		if i > 0 {
-			return s[i:]
-		}
-	}
-	return s[:0]
+	return err
 }

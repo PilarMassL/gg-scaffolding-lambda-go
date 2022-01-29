@@ -11,7 +11,7 @@ type Generator interface {
 
 // GeneratorSvc define un objeto que permite realizar operaciones útiles para construir generadores.
 type GeneratorSvc interface {
-	FillTpl(tpl models.SrcTpl, params interface{}) (models.SrcTpl, error)
+	FillTpl(tpl models.SrcTpl, params interface{}) (*models.SrcTpl, error)
 	FillTpls(tpls []models.SrcTpl, params interface{}) ([]models.SrcTpl, error)         //FillTpl sobre una lista
 	FillTplsAndSave(tpls []models.SrcTpl, params interface{}) ([]models.SrcFile, error) //FillTpls + Save (Efecto lateral)
 }

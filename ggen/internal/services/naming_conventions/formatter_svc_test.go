@@ -9,6 +9,20 @@ import (
 var validator = NewValidatorSvc()
 
 //ToCamelCase casos
+
+func TestToCamelCaseFromCamelCase(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	pascalCaseName := "functionName"
+
+	//Act
+	actual := formatter.ToCamelCase(pascalCaseName)
+
+	//Assert
+	assert := assert.New(t)
+	assert.Equal("functionName", actual)
+}
+
 func TestToCamelCaseFromPascalCase(t *testing.T) {
 	//Arrange
 	formatter := NewFormatterSvc(validator)
@@ -51,6 +65,19 @@ func TestToCamelCaseFromKebabCase(t *testing.T) {
 }
 
 //ToPascalCase casos
+func TestToPascalCaseFromPascalCase(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	camelCaseName := "FunctionName"
+
+	//Act
+	actual := formatter.ToPascalCase(camelCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("FunctionName", actual)
+}
 
 func TestToPascalCaseFromCamelCase(t *testing.T) {
 	//Arrange
@@ -95,6 +122,19 @@ func TestToPascalCaseFromKebabCase(t *testing.T) {
 }
 
 //ToKebabCase casos
+func TestToKebabCaseFromKebabCase(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	camelCaseName := "my-function-name-hello-world"
+
+	//Act
+	actual := formatter.ToKebabCase(camelCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("my-function-name-hello-world", actual)
+}
 
 func TestToKebabCaseFromCamelCase(t *testing.T) {
 	//Arrange
@@ -139,11 +179,24 @@ func TestToKebabCaseFromPascalCase(t *testing.T) {
 }
 
 //ToSnakeCase casos
+func TestToSnakeCaseFromSnakeCase(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	camelCaseName := "function_name"
+
+	//Act
+	actual := formatter.ToSnakeCase(camelCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("function_name", actual)
+}
 
 func TestToSnakeCaseFromCamelCase(t *testing.T) {
 	//Arrange
 	formatter := NewFormatterSvc(validator)
-	camelCaseName := "FunctionName"
+	camelCaseName := "functionName"
 
 	//Act
 	actual := formatter.ToSnakeCase(camelCaseName)
@@ -180,4 +233,48 @@ func TestToSnakeCaseFromPascalCase(t *testing.T) {
 	assert := assert.New(t)
 
 	assert.Equal("function_name", actual)
+}
+
+//Pruebas de casos extremos
+
+func TestToSnakeCaseEmptyInput(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	pascalCaseName := ""
+
+	//Act
+	actual := formatter.ToSnakeCase(pascalCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("", actual)
+}
+
+func TestToPascalCaseEmptyInput(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	pascalCaseName := ""
+
+	//Act
+	actual := formatter.ToPascalCase(pascalCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("", actual)
+}
+
+func TestToCamelCaseEmptyInput(t *testing.T) {
+	//Arrange
+	formatter := NewFormatterSvc(validator)
+	pascalCaseName := ""
+
+	//Act
+	actual := formatter.ToCamelCase(pascalCaseName)
+
+	//Assert
+	assert := assert.New(t)
+
+	assert.Equal("", actual)
 }

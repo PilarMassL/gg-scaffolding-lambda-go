@@ -89,6 +89,32 @@ func TestUpdateAbsolutePath(t *testing.T) {
 	}
 }
 
+// Debería fallar al intentar guardar en disco.
+func TestDiskSaveFailed(t *testing.T) {
+	//Arrange
+	//Se crea una carpeta temporal
+	wd, err := os.MkdirTemp("", "template_test")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	writer := NewDiskWriter(wd)
+	tpls := []models.SrcTpl{
+		{
+			RelativePath: "",
+			Content:      `hola mundo`,
+		},
+	}
+
+	//Act
+	filesSaved, err := writer.Save(tpls)
+
+	//Assert
+	assert := assert.New(t)
+	assert.NotNil(err)
+	assert.Nil(filesSaved)
+}
+
 /*
  funciones de ayuda
 */
