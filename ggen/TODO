@@ -1,4 +1,4 @@
-- Hacer que las rutas de los templates también sean templates en si mismos.
-- Integrar el generador de fn con el comando add.
 - agregar PromptUI para los parámetros que no fueron pasados por linea de comandos.
 - agregar generador de port/adapter básico.
+- corregir error: cuando se hace un `ggen init` se crea una configuración vacía y cuando se ejecuta correctamente
+no se reemplaza el valor `projectbase

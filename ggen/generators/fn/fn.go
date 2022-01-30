@@ -1,6 +1,8 @@
-package project
+package fn
 
 import (
+	"errors"
+
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/fn/templates"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/services/generator"
@@ -18,12 +20,31 @@ type FnGenerator struct {
 type FnEvents int
 
 const (
-	HttpEvent FnEvents = iota
-	S3Event
+	Invalid FnEvents = iota
+	Generic
+	Http
+	S3
 )
 
+func ParseEvent(s string) (FnEvents, error) {
+	if s == "generic" {
+		return Generic, nil
+	}
+	if s == "http" {
+		return Http, nil
+	}
+	if s == "s3" {
+		return S3, nil
+	}
+	return Invalid, errors.New("evento invalido")
+}
+
 func (fe FnEvents) String() string {
-	return []string{"Evento Http", "Evento desde S3"}[fe]
+	return []string{"invalid", "generic", "http", "S3"}[fe]
+}
+
+func (fe FnEvents) DescString() string {
+	return []string{"Evento invalido", "Evento Genérico", "Evento Http", "Evento desde S3"}[fe]
 }
 
 // FnParams contiene todos los parámetros necesarios para generar el esqueleto de una función.
@@ -67,7 +88,7 @@ func (fn *FnGenerator) Generate(params FnPromptParams) ([]models.SrcFile, error)
 func (fn *FnGenerator) completeTplParams(params FnPromptParams) *FnParams {
 	return &FnParams{
 		FnName:  fn.formatter.ToPascalCase(params.FnName),
-		FnEvent: fn.formatter.ToKebabCase(params.FnEvent.String()),
+		FnEvent: fn.formatter.ToKebabCase(params.FnEvent.DescString()),
 		FnDir:   fn.formatter.ToSnakeCase(params.FnName),
 	}
 }

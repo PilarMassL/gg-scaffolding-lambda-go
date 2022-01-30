@@ -65,7 +65,7 @@ func (g *GeneratorSvcDefault) FillTpls(tpls []models.SrcTpl, params interface{})
 			return nil, err
 		}
 		tplsFilled = append(tplsFilled, *tplFilled)
-		log.Printf("[Generator] plantilla '%s' rellenada correctamente.", tpl.RelativePath)
+		log.Printf("[Generator] plantilla '%s' rellenada correctamente.", tplFilled.RelativePath)
 	}
 	return tplsFilled, nil
 }
@@ -77,12 +77,14 @@ func (g *GeneratorSvcDefault) FillTplsAndSave(tpls []models.SrcTpl, params inter
 	if errFillingTpls != nil {
 		return nil, errFillingTpls
 	}
+	log.Print("[Generator] Plantillas rellenadas")
 
 	// Guardamos los archivos generados.
 	files, errSavingFiles := g.writer.Save(tplsFilled)
 	if errSavingFiles != nil {
 		return nil, errSavingFiles
 	}
+	log.Print("[Generator] Plantillas guardadas")
 	return files, nil
 }
 

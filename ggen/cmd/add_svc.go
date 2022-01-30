@@ -14,6 +14,10 @@ var svcCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		fmt.Println("svc invocado, Pendiente de implementar")
+		//Debe validar que:
+		//- Está en un proyecto inicializado.
+		//- la función indicada exista.
+
 	},
 }
 

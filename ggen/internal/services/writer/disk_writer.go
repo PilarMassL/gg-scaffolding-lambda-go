@@ -2,6 +2,7 @@ package writer
 
 import (
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -42,11 +43,20 @@ func updateFileAbsolutePath(tpl models.SrcTpl, wd string) models.SrcFile {
 
 // saveFile guarda un objeto models.SrcFile en el disco
 func saveFile(file models.SrcFile) error {
-	f, err := os.Create(file.AbsolutePath)
+	log.Printf("[DiskWriter] Intentamos guardar el archivo en: %s", file.AbsolutePath)
+	f, err := create(file.AbsolutePath)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 	_, err = io.WriteString(f, file.Content)
 	return err
+}
+
+//Forma estándar: https://stackoverflow.com/questions/59961510/golang-os-create-path-with-nested-directories#59961623
+func create(p string) (*os.File, error) {
+	if err := os.MkdirAll(filepath.Dir(p), 0770); err != nil {
+		return nil, err
+	}
+	return os.Create(p)
 }

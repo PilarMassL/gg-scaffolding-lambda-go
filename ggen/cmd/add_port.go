@@ -14,6 +14,11 @@ var portCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		fmt.Println("port invocado: Pendiente de implementar")
+
+		//Debe validar que:
+		//- Está en un proyecto inicializado.
+		//- la función indicada exista.
+		//- El adapter está dentro de los soportados.
 	},
 }
 
