@@ -7,10 +7,12 @@ func DummyReadMe() models.SrcTpl {
 		RelativePath: "./{{ .FnDir }}/readme.md",
 		Content: `
 # {{ .FnName }}
+
 Mi primera función usando el gg.
 
-Esta función se disparará por un evento:
-- {{ .FnEvent }}
+- Esta función se disparará por un evento: "{{ .FnEvent }}"
+- Proyecto Base: "{{ .FnBaseProject }}"
+
 `,
 	}
 }

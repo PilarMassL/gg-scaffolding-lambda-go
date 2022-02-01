@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	c "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/config"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project"
 )
 
@@ -30,7 +31,7 @@ ggen init my-project`,
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(c.InitConfig)
 	initCmd.PersistentFlags().StringVarP(&projectbase, "projectbase", "b", "", "base project directory eg. github.com/spf13/")
 	initCmd.MarkPersistentFlagRequired("projectbase")
 	viper.BindPFlag("projectbase", initCmd.PersistentFlags().Lookup("projectbase"))
@@ -39,7 +40,7 @@ func init() {
 
 func generateProject(name string) {
 	//Construimos todos los objetos que se requieren para la generación.
-	projectGenerator := project.NewProjectGenerator(BuildBaseGenerator())
+	projectGenerator := project.NewProjectGenerator(c.BuildBaseGenerator())
 
 	//Pasamos los argumentos a Params.
 	params := project.ProjectPromptParams{
@@ -49,12 +50,5 @@ func generateProject(name string) {
 	//Generamos el código fuente.
 	_, errGenerating := projectGenerator.Generate(params)
 	cobra.CheckErr(errGenerating)
-
-}
-
-func initConfig() {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("ggen")
-	viper.SetConfigType("yaml")
 
 }

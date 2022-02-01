@@ -7,7 +7,9 @@ func ReadMe() models.SrcTpl {
 		RelativePath: "./readme.md",
 		Content: `
 # {{ .ProjectName }}
+
 Mi primer proyecto usando el gg.
+
 `,
 	}
 }

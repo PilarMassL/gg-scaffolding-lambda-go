@@ -11,7 +11,9 @@ func ExpectedReadMePopulated() models.SrcFile {
 		AbsolutePath: "./readme.md",
 		Content: `
 # MyProject
+
 Mi primer proyecto usando el gg.
+
 `,
 	}
 }

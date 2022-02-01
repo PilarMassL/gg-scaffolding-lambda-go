@@ -20,7 +20,9 @@ func TestGenerateSuccess(t *testing.T) {
 	generator := NewFnGenerator(base)
 
 	params := FnPromptParams{
-		FnName: "MyFunctionHelloWorld",
+		FnName:        "MyFunctionHelloWorld",
+		FnBaseProject: "github.com/example",
+		FnEvent:       Http,
 	}
 
 	//Act
@@ -35,4 +37,52 @@ func TestGenerateSuccess(t *testing.T) {
 		}
 		utils.AssertSrcFilesEqual(assert, expectedFiles, actualFiles)
 	}
+}
+
+//Debería devolver el FnEvents (Enumeración) a partir de un String
+func TestParseFnEventsSuccess(t *testing.T) {
+	//Arrange
+	genericStr := "generic"
+	httpStr := "http"
+	s3Str := "s3"
+
+	//Act
+	genericResult, _ := ParseEvent(genericStr)
+	httpResult, _ := ParseEvent(httpStr)
+	s3Result, _ := ParseEvent(s3Str)
+
+	//Assert
+	assert := assert.New(t)
+	assert.Equal(Generic, genericResult)
+	assert.Equal(Http, httpResult)
+	assert.Equal(S3, s3Result)
+}
+
+//Debería fallar al interpretar un string que no coincide con un FnEvents (Enumeración)
+func TestParseFnEventsFailed(t *testing.T) {
+	//Arrange
+	inputStr := "k.e.s.o"
+
+	//Act
+	result, err := ParseEvent(inputStr)
+
+	//Assert
+	assert := assert.New(t)
+	assert.NotNil(err)
+	assert.Equal(Invalid, result)
+}
+
+func TestFnEventsToStringSuccess(t *testing.T) {
+	//Arrange
+
+	//Act
+	genericResult := Generic.String()
+	httpResult := Http.String()
+	s3Result := S3.String()
+
+	//Assert
+	assert := assert.New(t)
+	assert.Equal("generic", genericResult)
+	assert.Equal("http", httpResult)
+	assert.Equal("S3", s3Result)
 }

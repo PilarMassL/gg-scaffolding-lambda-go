@@ -49,14 +49,16 @@ func (fe FnEvents) DescString() string {
 
 // FnParams contiene todos los parámetros necesarios para generar el esqueleto de una función.
 type FnPromptParams struct {
-	FnName  string   `prompt:"¿Cuál es el nombre de la función?" type:"input"`
-	FnEvent FnEvents `prompt:"¿Cuál es el tipo de evento que dispara la función?" type:"list"`
+	FnName        string   `prompt:"¿Cuál es el nombre de la función?" type:"input"`
+	FnEvent       FnEvents `prompt:"¿Cuál es el tipo de evento que dispara la función?" type:"list"`
+	FnBaseProject string
 }
 
 type FnParams struct {
-	FnName  string
-	FnEvent string
-	FnDir   string
+	FnName        string
+	FnEvent       string
+	FnDir         string
+	FnBaseProject string
 }
 
 func NewFnGenerator(generatorBase generator.GeneratorSvc) *FnGenerator {
@@ -87,8 +89,9 @@ func (fn *FnGenerator) Generate(params FnPromptParams) ([]models.SrcFile, error)
 
 func (fn *FnGenerator) completeTplParams(params FnPromptParams) *FnParams {
 	return &FnParams{
-		FnName:  fn.formatter.ToPascalCase(params.FnName),
-		FnEvent: fn.formatter.ToKebabCase(params.FnEvent.DescString()),
-		FnDir:   fn.formatter.ToSnakeCase(params.FnName),
+		FnName:        fn.formatter.ToPascalCase(params.FnName),
+		FnEvent:       fn.formatter.ToKebabCase(params.FnEvent.DescString()),
+		FnDir:         fn.formatter.ToSnakeCase(params.FnName),
+		FnBaseProject: params.FnBaseProject,
 	}
 }

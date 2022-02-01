@@ -11,10 +11,12 @@ func ExpectedDummyReadMePopulated() models.SrcFile {
 		AbsolutePath: "./my_function_hello_world/readme.md",
 		Content: `
 # MyFunctionHelloWorld
+
 Mi primera función usando el gg.
 
-Esta función se disparará por un evento:
-- evento-http
+- Esta función se disparará por un evento: "evento-http"
+- Proyecto Base: "github.com/example"
+
 `,
 	}
 }
