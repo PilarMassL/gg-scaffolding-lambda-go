@@ -1,34 +1,33 @@
 package project
 
 import (
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project/templates"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/models"
+	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/internal/services/generator"
 )
 
 // ProjectGenerator genera la estructura base de un proyecto al cuál se le pueden agregar funciones.
 type ProjectGenerator struct {
-	helper generators.GeneratorHelper
-	writer generators.Writer
+	gen generator.GeneratorSvc
 }
 
 // ProjectParams contiene todos los parámetros necesarios para generar el proyecto base.
-type ProjectParams struct {
+type ProjectPromptParams struct {
 	ProjectName string `prompt:"¿Cuál es el nombre del proyecto?"`
 }
 
-func NewProjectGenerator(writer generators.Writer) *ProjectGenerator {
+func NewProjectGenerator(generator generator.GeneratorSvc) *ProjectGenerator {
 	return &ProjectGenerator{
 		// Acoplamos el Helper al generador, con la ventaja de simplificar la creación.
-		helper: generators.NewGeneratorHelper(),
-		writer: writer,
+		gen: generator,
 	}
 }
 
-func (g *ProjectGenerator) Generate(params ProjectParams) ([]generators.SrcFile, error) {
+func (p *ProjectGenerator) Generate(params ProjectPromptParams) ([]models.SrcFile, error) {
 	//obtenemos las plantillas
-	tpls := []generators.SrcTpl{
+	tpls := []models.SrcTpl{
 		templates.ReadMe(),
 	}
 	//Rellenamos y guardamos
-	return g.helper.FillTplsAndSave(tpls, params, g.writer)
+	return p.gen.FillTplsAndSave(tpls, params)
 }

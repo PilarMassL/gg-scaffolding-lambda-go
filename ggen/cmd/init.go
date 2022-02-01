@@ -2,17 +2,19 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
-	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators"
+	c "github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/config"
 	"github.com/PilarMassL/gg-scaffolding-lambda-go/ggen/generators/project"
 )
 
+var projectbase string
+
 // initCmd representa el comando para iniciar un proyecto basado en funciones.
 var initCmd = &cobra.Command{
-	Use:   "init [project name]",
+	Use:   "init",
 	Short: "Permite iniciar un proyecto basado en funciones",
 	Long: `Permite iniciar un proyecto basado en funciones.
 Normalmente agrupamos en un solo repositorio funciones que mantienen cierta coherencia
@@ -22,30 +24,26 @@ Ejemplo:
 ggen init my-project`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init invocado")
-
-		if len(args) < 1 {
-			cobra.CheckErr(fmt.Errorf("init necesita el nombre del proyecto"))
-		}
-
-		initProject(args[0])
+		generateProject(projectbase)
+		viper.SafeWriteConfig()
 
 	},
 }
 
 func init() {
+	cobra.OnInitialize(c.InitConfig)
+	initCmd.PersistentFlags().StringVarP(&projectbase, "projectbase", "b", "", "base project directory eg. github.com/spf13/")
+	initCmd.MarkPersistentFlagRequired("projectbase")
+	viper.BindPFlag("projectbase", initCmd.PersistentFlags().Lookup("projectbase"))
 	rootCmd.AddCommand(initCmd)
 }
 
-func initProject(name string) {
-	wd, err := os.Getwd()
-	cobra.CheckErr(err)
-
+func generateProject(name string) {
 	//Construimos todos los objetos que se requieren para la generación.
-	writer := generators.NewDiskWriter(wd)
-	projectGenerator := project.NewProjectGenerator(writer)
+	projectGenerator := project.NewProjectGenerator(c.BuildBaseGenerator())
 
 	//Pasamos los argumentos a Params.
-	params := project.ProjectParams{
+	params := project.ProjectPromptParams{
 		ProjectName: name,
 	}
 

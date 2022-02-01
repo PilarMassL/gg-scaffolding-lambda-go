@@ -1,19 +1,10 @@
-package generators
+package writer
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func createFakeDummyTplFilled() []SrcTpl {
-	return []SrcTpl{
-		{
-			RelativePath: "./test.txt",
-			Content:      `hola mundo`,
-		},
-	}
-}
 
 // Debería simplemente devolver la lista de archivos indicada.
 func TestFakeSaveSuccess(t *testing.T) {

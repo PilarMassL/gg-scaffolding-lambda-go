@@ -1,0 +1,4 @@
+- agregar PromptUI para los parámetros que no fueron pasados por linea de comandos.
+- agregar generador de port/adapter básico.
+- corregir error: cuando se hace un `ggen init` se crea una configuración vacía y cuando se ejecuta correctamente
+no se reemplaza el valor `projectbase
